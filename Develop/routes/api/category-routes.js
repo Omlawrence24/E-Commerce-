@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
 
-// The `/api/categories` endpoint
 
+// GET ALL CATEGORIES 
 router.get('/', async (req, res) => {
   try {
-  // find all categories
+
   // be sure to include its associated Products
   const categoryData = await Category.findAll({
     include: [{model: Product}],
@@ -22,13 +22,14 @@ res.status(500).json(err);
 }
 });
 
+// GET CATEGORY BY ID
 router.get('/:id', async (req, res) => {
-  // find one category by its `id` value
+  
   // be sure to include its associated Products
   try {
     const categoryData = await Category.findByPk(req.params.id, {
       include: [{ model: Category, Product }],
-      // include: [{ model:Category, model:Product, }],
+     
     });
 
     if (!categoryData) {
@@ -41,9 +42,9 @@ router.get('/:id', async (req, res) => {
     res.status(500).json(err);
   }
 });
-
+// CREATE A NEW CATEGORY 
 router.post('/', async (req, res) => {
-  // create a new category
+  
   try {
     const newCategory = await Category.create({
   
@@ -56,28 +57,58 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
-  // update a category by its `id` value
-});
+// UPDATE A CATEGORY
 
-router.delete('/:id', async (req, res) => {
-  // delete a category by its `id` value
-  try {
-    const choosenProduct = await Product.destroy({
+  router.put('/:id', async (req, res) => {
+    // update product data
+    Product.update(req.body, {
       where: {
         id: req.params.id,
       },
-    });
+    })
+      .then((product) => {
+        console.log(product)
+        // find all associated tags from ProductTag
+        return ProductTag.findAll({ where: { product_id: req.params.id } });
+      })
+      .then((productTags) => {
+        // get list of current tag_ids
+        const productTagIds = productTags.map(({ tag_id }) => tag_id);
+        // create filtered list of new tag_ids
+        const newProductTags = req.body.tagIds
+          .filter((tag_id) => !productTagIds.includes(tag_id))
+          .map((tag_id) => {
+            return {
+              product_id: req.params.id,
+              tag_id,
+            };
+          });
+        // figure out which ones to remove
+        const productTagsToRemove = productTags
+          .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
+          .map(({ id }) => id);
 
-    if (!choosenProduct) {
-      res.status(404).json({ message: 'No Product found with that id!' });
-      return;
-    }
+      })
+      .then((updatedProductTags) => res.json(updatedProductTags))
+      .catch((err) => {
+        // console.log(err);
+        res.status(400).json(err);
+      });
+  });
+  
 
-    res.status(200).json(choosenProduct);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+
+// DELETE AT CATEGORY 
+router.delete('/:id', async (req, res) => {
+ 
+    const choosenProduct = await Category.destroy({
+      where: {
+        id: req.body.id,
+      },
+    }).catch ((err) => res.json(err));
+    res.json(choosenProduct)
+    
+  
 });
 
 module.exports = router;

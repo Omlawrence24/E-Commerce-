@@ -11,10 +11,12 @@ Category.init(
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
+      DELETE: CASCADE,
     },
     category_name: {
       type: DataTypes.STRING,
       allowNull: false,
+      DELETE: CASCADE,
       
     },
   },
