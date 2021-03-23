@@ -103,11 +103,11 @@ router.delete('/:id', async (req, res) => {
  
     const choosenProduct = await Category.destroy({
       where: {
-        id: req.body.id,
+        id: req.params.id,
       },
     }).catch ((err) => res.json(err));
-    res.json(choosenProduct)
-    
+    res.json(choosenProduct);
+    console.log(choosenProduct);
   
 });
 

@@ -15,6 +15,16 @@ Tag.init(
     tag_name: {
       type: DataTypes.STRING,
     },
+    
+    category_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: "cascade",
+      references: {
+        model: "Category",
+        key : "id",
+    },
+    },
    
   },
   {
