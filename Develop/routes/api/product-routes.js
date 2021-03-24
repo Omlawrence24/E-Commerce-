@@ -107,7 +107,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const choosenProduct = await Product.destroy({
       where: {
-        category_name: req.params.category_name,
+        id: req.params.id,
       },
     });
 

@@ -11,30 +11,21 @@ ProductTag.init(
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
-      onDELETE: "CASCADE"
+      
     },
     product_id: {
       type: DataTypes.INTEGER,
      references:{
-       model: "Product",
+       model: "product",
        key: "id",
      }
     },
     tag_id: {
       type: DataTypes.INTEGER,
      references:{
-       model: "Tag",
+       model: "tag",
        key: "id",
      }
-    },
-    category_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      onDelete: "cascade",
-      references: {
-        model: "Category",
-        key : "id",
-    },
     },
   },
   {

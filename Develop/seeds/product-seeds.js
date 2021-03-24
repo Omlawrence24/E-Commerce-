@@ -33,6 +33,9 @@ const productData = [
   },
 ];
 
+console.log("PRODUCT IN PRODUCT_SEEDS.js")
+console.log(Product);
+
 const seedProducts = () => Product.bulkCreate(productData);
 
 module.exports = seedProducts;
