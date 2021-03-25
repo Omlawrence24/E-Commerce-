@@ -11,11 +11,11 @@ router.get('/', async (req, res) => {
     include: [{model: Product}],
   });
 
-if (!categoryData) {
-  res.status(404).json({ message: 'No Catergory found with that id!' });
-  return;
-}
-
+  if (!categoryData) {
+    res.status(404).json({ message: 'No Category found!' });
+    return;
+  }
+  
 res.status(200).json(categoryData);
 } catch (err) { 
 res.status(500).json(err);
@@ -101,13 +101,13 @@ router.post('/', async (req, res) => {
 // DELETE AT CATEGORY 
 router.delete('/:id', async (req, res) => {
  
-    const choosenProduct = await Category.destroy({
+    const choosenCategory = await Category.destroy({
       where: {
         id: req.params.id,
       },
     }).catch ((err) => res.json(err));
-    res.json(choosenProduct);
-    console.log(choosenProduct);
+    res.json(choosenCategory)
+    console.log(choosenCategory);
   
 });
 
